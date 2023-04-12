@@ -123,19 +123,19 @@ ct_test_run(char *test_name, struct ct_test_summary (*test_fn)(void)) {
 typedef struct ct_test_summary test;
 
 #define TESTS(fn)                                                              \
-	{ tests_run(#fn, fn); }
+	{ ct_tests_run(#fn, fn); }
 #define TEST(fn)                                                               \
-	{ test_run(#fn, fn); }
+	{ ct_test_run(#fn, fn); }
 #define PASS()                                                                 \
-	{ return test_pass(); }
+	{ return ct_test_pass(); }
 #define FAIL()                                                                 \
-	{ return test_fail("FAIL()", __LINE__); }
+	{ return ct_test_fail("FAIL()", __LINE__); }
 #define SKIP(fn)                                                               \
-	{ return test_skip(__LINE__); }
+	{ return ct_test_skip(__LINE__); }
 #define EXPECT(val)                                                            \
 	{                                                                            \
 		if (!(val)) {                                                              \
-			return test_fail("EXPECT(" #val ")", __LINE__);                          \
+			return ct_test_fail("EXPECT(" #val ")", __LINE__);                       \
 		}                                                                          \
 	}
 
