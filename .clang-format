@@ -4,4 +4,5 @@ IndentWidth: 2
 TabWidth: 2
 UseTab: Always
 AlignAfterOpenBracket: BlockIndent
+SeparateDefinitionBlocks: Always
 ...
