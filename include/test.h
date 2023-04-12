@@ -5,32 +5,32 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#define ANSI_COLOR_RED "\x1b[31m"
-#define ANSI_COLOR_GREEN "\x1b[32m"
-#define ANSI_COLOR_YELLOW "\x1b[33m"
-#define ANSI_COLOR_BLUE "\x1b[34m"
-#define ANSI_COLOR_RESET "\x1b[0m"
+#define ct_ANSI_COLOR_RED "\x1b[31m"
+#define ct_ANSI_COLOR_GREEN "\x1b[32m"
+#define ct_ANSI_COLOR_YELLOW "\x1b[33m"
+#define ct_ANSI_COLOR_BLUE "\x1b[34m"
+#define ct_ANSI_COLOR_RESET "\x1b[0m"
 
-enum test_result {
+enum ct_test_result {
 	TEST_RESULT_NONE,
 	TEST_RESULT_PASS,
 	TEST_RESULT_FAIL,
 	TEST_RESULT_SKIP
 };
 
-struct test_summary {
-	enum test_result result;
+struct ct_test_summary {
+	enum ct_test_result result;
 	char *test_name;
 	char *message;
 	int line_number;
 };
 
-static int tests_passed = 0;
-static int tests_failed = 0;
-static int tests_skipped = 0;
+int ct_tests_passed = 0;
+int ct_tests_failed = 0;
+int ct_tests_skipped = 0;
 
-struct test_summary blank_test_summary(void) {
-	struct test_summary summary;
+struct ct_test_summary ct_blank_test_summary(void) {
+	struct ct_test_summary summary;
 	summary.result = TEST_RESULT_NONE;
 	summary.test_name = NULL;
 	summary.message = NULL;
@@ -38,87 +38,89 @@ struct test_summary blank_test_summary(void) {
 	return summary;
 }
 
-void display_test(struct test_summary summary) {
+void ct_display_test(struct ct_test_summary summary) {
 	switch (summary.result) {
 	case TEST_RESULT_NONE:
 		assert(0);
 	case TEST_RESULT_PASS:
-		printf(ANSI_COLOR_GREEN "PASS");
+		printf(ct_ANSI_COLOR_GREEN "PASS");
 		break;
 	case TEST_RESULT_FAIL:
-		printf(ANSI_COLOR_RED "FAIL");
+		printf(ct_ANSI_COLOR_RED "FAIL");
 		break;
 	case TEST_RESULT_SKIP:
-		printf(ANSI_COLOR_YELLOW "SKIP");
+		printf(ct_ANSI_COLOR_YELLOW "SKIP");
 		break;
 	}
-	printf(ANSI_COLOR_RESET "\t");
-	printf(ANSI_COLOR_YELLOW "%s" ANSI_COLOR_RESET, summary.test_name);
+	printf(ct_ANSI_COLOR_RESET "\t");
+	printf(ct_ANSI_COLOR_YELLOW "%s" ct_ANSI_COLOR_RESET, summary.test_name);
 	if (summary.message != NULL) {
 		printf("\t");
 		printf("%s", summary.message);
 		if (summary.line_number >= 0) {
 			printf(" on ");
-			printf(ANSI_COLOR_BLUE "line %d" ANSI_COLOR_RESET, summary.line_number);
+			printf(
+					ct_ANSI_COLOR_BLUE "line %d" ct_ANSI_COLOR_RESET, summary.line_number
+			);
 		}
 	}
 }
 
-void track_test_summary(struct test_summary summary) {
+void ct_track_test_summary(struct ct_test_summary summary) {
 	switch (summary.result) {
 	case TEST_RESULT_NONE:
 		assert(0);
 	case TEST_RESULT_PASS:
-		tests_passed++;
+		ct_tests_passed++;
 		break;
 	case TEST_RESULT_FAIL:
-		tests_failed++;
+		ct_tests_failed++;
 		break;
 	case TEST_RESULT_SKIP:
-		tests_skipped++;
+		ct_tests_skipped++;
 		break;
 	}
 }
 
-struct test_summary test_pass(void) {
-	struct test_summary summary = blank_test_summary();
+struct ct_test_summary ct_test_pass(void) {
+	struct ct_test_summary summary = ct_blank_test_summary();
 	summary.result = TEST_RESULT_PASS;
 	return summary;
 }
 
-struct test_summary test_fail(char *failure_code, int failure_line) {
-	struct test_summary summary = blank_test_summary();
+struct ct_test_summary ct_test_fail(char *failure_code, int failure_line) {
+	struct ct_test_summary summary = ct_blank_test_summary();
 	summary.result = TEST_RESULT_FAIL;
 	summary.message = failure_code;
 	summary.line_number = failure_line;
 	return summary;
 }
 
-struct test_summary test_skip(int line_number) {
-	struct test_summary summary = blank_test_summary();
+struct ct_test_summary ct_test_skip(int line_number) {
+	struct ct_test_summary summary = ct_blank_test_summary();
 	summary.result = TEST_RESULT_SKIP;
 	summary.message = "SKIP()";
 	summary.line_number = line_number;
 	return summary;
 }
 
-void tests_run(char *filename, void (*tests_fn)(void)) {
-	printf(ANSI_COLOR_BLUE "%s" ANSI_COLOR_RESET ":\n\n", filename);
+void ct_tests_run(char *filename, void (*tests_fn)(void)) {
+	printf(ct_ANSI_COLOR_BLUE "%s" ct_ANSI_COLOR_RESET ":\n\n", filename);
 	tests_fn();
 	printf("\n");
 }
 
-struct test_summary
-test_run(char *test_name, struct test_summary (*test_fn)(void)) {
-	struct test_summary summary = test_fn();
+struct ct_test_summary
+ct_test_run(char *test_name, struct ct_test_summary (*test_fn)(void)) {
+	struct ct_test_summary summary = test_fn();
 	summary.test_name = test_name;
-	track_test_summary(summary);
-	display_test(summary);
+	ct_track_test_summary(summary);
+	ct_display_test(summary);
 	printf("\n");
 	return summary;
 }
 
-typedef struct test_summary test;
+typedef struct ct_test_summary test;
 
 #define TESTS(fn)                                                              \
 	{ tests_run(#fn, fn); }
@@ -137,20 +139,20 @@ typedef struct test_summary test;
 		}                                                                          \
 	}
 
-int summarize_tests(void) {
-	int failed = tests_failed > 0;
+int ct_summarize_tests(void) {
+	int failed = ct_tests_failed > 0;
 
 	if (failed) {
-		printf(ANSI_COLOR_RED "FAIL" ANSI_COLOR_RESET);
+		printf(ct_ANSI_COLOR_RED "FAIL" ct_ANSI_COLOR_RESET);
 	} else {
-		printf(ANSI_COLOR_GREEN "PASS" ANSI_COLOR_RESET);
+		printf(ct_ANSI_COLOR_GREEN "PASS" ct_ANSI_COLOR_RESET);
 	}
 
 	printf("\t");
-	printf("total: %d, ", tests_passed + tests_failed + tests_skipped);
-	printf("passed: %d, ", tests_passed);
-	printf("failed: %d, ", tests_failed);
-	printf("skipped: %d\n", tests_skipped);
+	printf("total: %d, ", ct_tests_passed + ct_tests_failed + ct_tests_skipped);
+	printf("passed: %d, ", ct_tests_passed);
+	printf("failed: %d, ", ct_tests_failed);
+	printf("skipped: %d\n", ct_tests_skipped);
 
 	return failed;
 }
