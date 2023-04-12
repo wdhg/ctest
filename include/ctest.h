@@ -1,5 +1,5 @@
-#ifndef TEST_H
-#define TEST_H
+#ifndef CTEST_H
+#define CTEST_H
 
 #include <assert.h>
 #include <ctype.h>
