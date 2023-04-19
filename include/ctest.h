@@ -36,8 +36,8 @@ typedef struct test_summary test;
 
 #define TESTS(fn)                                                              \
 	{                                                                            \
-		printf(ANSI_COLOR_BLUE "%s" ANSI_COLOR_RESET ":\n\n", filename);           \
-		tests_fn();                                                                \
+		printf(ANSI_COLOR_BLUE "%s" ANSI_COLOR_RESET ":\n\n", #fn);                \
+		fn();                                                                      \
 		printf("\n");                                                              \
 	}
 #define TEST(fn)                                                               \
