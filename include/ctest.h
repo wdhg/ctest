@@ -46,7 +46,7 @@ typedef struct test_summary test;
 	{ return test_pass(); }
 #define FAIL()                                                                 \
 	{ return test_fail("FAIL()", __LINE__); }
-#define SKIP(fn)                                                               \
+#define SKIP()                                                                 \
 	{ return test_skip(__LINE__); }
 #define EXPECT(val)                                                            \
 	{                                                                            \
