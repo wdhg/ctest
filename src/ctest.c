@@ -78,7 +78,7 @@ test_run(char *test_name, struct test_summary (*test_fn)(void)) {
 	return summary;
 }
 
-int test_summarize(void) {
+int tests_summarize(void) {
 	int failed = tests_failed > 0;
 
 	if (failed) {
